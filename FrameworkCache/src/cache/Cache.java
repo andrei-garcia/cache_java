@@ -7,33 +7,44 @@ import java.util.Map;
 
 
 public class Cache {
-	private static  Map<String,Object> cache = new HashMap<String,Object>();;	
+		
+	private   Map<String,Object> lista = new HashMap<String,Object>();
+	private static Cache cache = new Cache();
 	
 	private Cache(){
 		
 	}
-
+	
+	
+	
 
 	public  boolean hasKey(String s){
-		if(cache.containsKey(s))return true;
+		if(cache.lista.containsKey(s))return true;
 		return false;
 	}
 	
 	
 	public Object get(String key){
-		return cache.get(key);
+		return cache.lista.get(key);
 		
 	}
 	
 	
 	
+	public static Cache getCache() {
+		return cache;
+	}
+
+
+
+
 	public  void add(String key,Object o,int tempo){
-		cache.put(key,o);
+		cache.lista.put(key,o);
 		monitoraCache(tempo,key);
 	}
 	
 	public  void purg(){
-		cache.clear();
+		cache.lista.clear();
 	}
 	
 	private static  void monitoraCache( final int tempo,final String key) {
@@ -46,7 +57,7 @@ public class Cache {
 	                while (true) {
 	                    try {
 	                    if(time==0){
-	                    	cache.remove(key);
+	                    	cache.lista.remove(key);
 	                    	System.out.println("removido do cache");
 	                    	return;
 	                    }

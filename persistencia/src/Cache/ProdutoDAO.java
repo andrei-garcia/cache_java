@@ -50,9 +50,9 @@ public class ProdutoDAO {
 	public List<Produto> lista() {
 		List<Produto> produtos = new ArrayList<Produto>();
 		
-		if(Cache.hasKey("produtos")){
+		if(Cache.getCache().hasKey("produtos")){
 			System.out.println("lista buscada no cache");
-			return (List<Produto>) Cache.get("produtos");
+			return (List<Produto>) Cache.getCache().get("produtos");
 			
 		}
 		
@@ -79,7 +79,7 @@ public class ProdutoDAO {
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-			Cache.add("produtos",produtos,60);
+			Cache.getCache().add("produtos",produtos,60);
 			System.out.println("lista inserida no cache");
 		
 		
