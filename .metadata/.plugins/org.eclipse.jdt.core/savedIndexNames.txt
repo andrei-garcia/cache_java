@@ -1,0 +1,5 @@
+INDEX VERSION 1.126+C:\Users\TADS-DESENVOLVIMENTO\Documents\GitHub\cache_java\.metadata\.plugins\org.eclipse.jdt.core
+1857579926.index
+2726076091.index
+3243031214.index
+2779629487.index
