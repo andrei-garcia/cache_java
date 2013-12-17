@@ -1,0 +1,21 @@
+package cache;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimerTask;
+import java.util.Timer;
+
+class MonitoraChave extends TimerTask{
+	private   Map<String,Object> listaChaves = new HashMap<String,Object>();
+	
+	void monitorarChaves(){
+		
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

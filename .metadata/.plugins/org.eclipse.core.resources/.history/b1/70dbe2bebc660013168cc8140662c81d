@@ -10,7 +10,7 @@ public class Cache {
 		
 	private   Map<String,Object> lista = new HashMap<String,Object>();
 	private static Cache cache = new Cache();
-	private MonitoraChave monitororDeChavesDoCache;
+	private MonitoraCache monitoraOCache;
 	
 	private Cache(){
 		

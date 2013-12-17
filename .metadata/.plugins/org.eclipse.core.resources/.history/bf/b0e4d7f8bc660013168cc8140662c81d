@@ -1,0 +1,13 @@
+package cache;
+
+import java.util.HashMap;
+import java.util.Map;
+
+class MonitoraChave {
+	private   Map<String,Object> listaChaves = new HashMap<String,Object>();
+	
+	void monitorarChaves(){
+		
+	}
+
+}
