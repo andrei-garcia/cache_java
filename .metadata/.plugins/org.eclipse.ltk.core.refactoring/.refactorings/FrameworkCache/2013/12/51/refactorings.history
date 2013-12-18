@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename field &apos;listaChaves&apos; in &apos;cache.Cache&apos; to &apos;listaChavesMonitoradas&apos;&#x0D;&#x0A;- Original project: &apos;FrameworkCache&apos;&#x0D;&#x0A;- Original element: &apos;cache.Cache.listaChaves&apos;&#x0D;&#x0A;- Renamed element: &apos;cache.Cache.listaChavesMonitoradas&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" delegate="false" deprecate="false" description="Rename field &apos;listaChaves&apos;" flags="589826" getter="false" id="org.eclipse.jdt.ui.rename.field" input="/src&lt;cache{Cache.java[Cache^listaChaves" name="listaChavesMonitoradas" references="true" setter="false" stamp="1387329272837" textual="false" version="1.0"/>
+</session>

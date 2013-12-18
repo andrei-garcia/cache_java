@@ -1,0 +1,116 @@
+package cache;
+
+
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+
+
+public class Cache {
+		
+	private   Map<String,Object> listaObjetosNoCache = new HashMap<String,Object>();
+	private   Map<String,Object> listaChavesMonitoradas = new HashMap<String,Object>();
+	private static Cache cache = new Cache();
+	
+	
+	private Cache(){
+		
+	}
+	
+	static {
+		monitorarChavesDoCache();
+		
+	}
+	
+
+	public  boolean hasKey(String s){
+		if(cache.listaObjetosNoCache.containsKey(s))return true;
+		return false;
+	}
+	
+	
+	
+
+
+	public Object get(String key){
+		return cache.listaObjetosNoCache.get(key);
+		
+	}
+	
+	
+	
+	public static Cache getCache() {
+		return cache;
+	}
+
+
+
+
+	public  void add(String key,Object o,int tempo){
+		
+		addChaveObjetoNoCache(key,o);
+		addChaveParaMonitorar(key,tempo);
+		
+	}
+	
+	public  void limpaListaDoCache(){
+		cache.listaObjetosNoCache.clear();
+	}
+	
+	private void addChaveParaMonitorar(String key,int tempo){
+		cache.listaChavesMonitoradas.put(key,tempo);
+		
+	}
+	
+	private void addChaveObjetoNoCache(String key,Object objeto){
+		cache.listaObjetosNoCache.put(key,objeto);
+	}
+	
+/*	private static  void monitoraCache( final int tempo,final String key) {
+		  
+	     new Thread(new Runnable() { 
+	     
+	            @Override
+	            public void run() {
+	            	int time=tempo;
+	                while (true) {
+	                    try {
+	                    if(time==0){
+	                    	cache.lista.remove(key);
+	                    	System.out.println("removido do cache");
+	                    	return;
+	                    }
+	                    
+	                    System.out.println("monitorando cache");
+	                    Thread.sleep(1000); 
+	                    time--;
+	                    } catch (Exception e) {
+	                    	System.err.println(e);
+	                    }                    
+	                }
+	            }
+	       }).start();          
+	  }*/
+	
+	class MonitoraChaves extends TimerTask {
+		
+	 void monitorarChavesDoCache() {
+			Timer timer = new Timer();
+			
+			timer.schedule(new MonitoraChaves(),1000,1000);
+			
+		}
+
+	@Override
+	public void run() {
+		ArrayList chavesParaExcluir = new ArrayList();
+		
+		
+	}
+		
+	}
+}
