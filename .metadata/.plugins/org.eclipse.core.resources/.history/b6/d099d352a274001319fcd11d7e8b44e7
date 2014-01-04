@@ -1,0 +1,16 @@
+/**
+ * 
+ */
+package cache;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+/**
+ * @author TADS-DESENVOLVIMENTO
+ *
+ */
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ColocarNoCache {
+
+}

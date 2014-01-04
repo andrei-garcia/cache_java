@@ -1,0 +1,8 @@
+package Cache;
+
+import java.util.List;
+
+public interface IProdutoDAO {
+	public void salva(Produto p);
+	public List<Produto> lista();
+}

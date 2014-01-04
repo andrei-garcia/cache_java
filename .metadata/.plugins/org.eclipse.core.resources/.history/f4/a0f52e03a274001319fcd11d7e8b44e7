@@ -1,0 +1,12 @@
+/**
+ * 
+ */
+package cache;
+
+/**
+ * @author TADS-DESENVOLVIMENTO
+ *
+ */
+public @interface ColocarNoCache {
+
+}

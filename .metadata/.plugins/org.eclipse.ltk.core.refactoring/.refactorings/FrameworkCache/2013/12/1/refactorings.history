@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;tempo&apos; in &apos;cache.Cache.MonitoraChaves.run()&apos; to &apos;tempoEmMillisDaChave&apos;&#x0D;&#x0A;- Original project: &apos;FrameworkCache&apos;&#x0D;&#x0A;- Original element: &apos;cache.Cache.MonitoraChaves.run().tempo&apos;&#x0D;&#x0A;- Renamed element: &apos;tempo&apos;&#x0D;&#x0A;- Update references to refactored element" description="Rename local variable &apos;tempo&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;cache{Cache.java[Cache[MonitoraChaves~run@tempo!1720!1730!1725!1729!J!0!false" name="tempoEmMillisDaChave" references="true" stamp="1388504097213" version="1.0"/>
+</session>

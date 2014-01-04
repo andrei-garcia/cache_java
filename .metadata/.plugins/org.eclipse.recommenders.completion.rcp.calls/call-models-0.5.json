@@ -8,5 +8,10 @@
     "coordinate": "jre:jre:zip:call:1.0.0",
     "location": "C:\\Program Files\\Java\\jre7\\lib\\rt.jar",
     "status": "RESOLVED"
+  },
+  "C:\\Users\\TADS-DESENVOLVIMENTO\\Documents\\GitHub\\cache_java\\persistencia\\src": {
+    "location": "C:\\Users\\TADS-DESENVOLVIMENTO\\Documents\\GitHub\\cache_java\\persistencia\\src",
+    "status": "UNRESOLVED",
+    "error": "No class path info available for \u0027C:\\Users\\TADS-DESENVOLVIMENTO\\Documents\\GitHub\\cache_java\\persistencia\\src\u0027. Skipped."
   }
 }

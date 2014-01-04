@@ -13,8 +13,10 @@ import cache.Cache;
 
 
 
-public class ProdutoDAO {
+
+public class ProdutoDAO implements IProdutoDAO {
 	
+	@Override
 	public void salva(Produto p) {
 
 		try {
@@ -45,9 +47,48 @@ public class ProdutoDAO {
 	
 		
 	}
-
-	@SuppressWarnings("unchecked")
+	
+	@Override
 	public List<Produto> lista() {
+		List<Produto> produtos = new ArrayList<Produto>();
+		
+//		if(Cache.getCache().hasKey("produtos")){
+//			System.out.println("lista buscada no cache");
+//			return (List<Produto>) Cache.getCache().get("produtos");
+//			
+//		}
+//		
+			
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+
+				Connection con = DriverManager.getConnection("jdbc:mysql://localhost/tr", "root", "19849955");
+
+				Statement cmd = con.createStatement();
+
+				ResultSet rows = cmd.executeQuery("SELECT * FROM produtos");
+
+				while (rows.next()) {
+					Produto p = new Produto();
+					p.setId(rows.getInt("id_produto"));
+					p.setDescricao(rows.getString("descricao"));
+					produtos.add(p);
+				}
+				
+				cmd.close();
+				con.close();
+				
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+//			Cache.getCache().add("produtos",produtos,60);
+//			System.out.println("lista inserida no cache");
+//		
+		
+		return produtos;	
+	}
+
+	public List<Produto> lista2() {
 		List<Produto> produtos = new ArrayList<Produto>();
 		
 		if(Cache.getCache().hasKey("produtos")){
@@ -85,8 +126,6 @@ public class ProdutoDAO {
 		
 		return produtos;	
 	}
-
-
 	
 }
 
