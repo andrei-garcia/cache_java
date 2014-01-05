@@ -6,6 +6,6 @@ import cache.ColocarNoCache;
 
 public interface IProdutoDAO {
 	public void salva(Produto p);
-	@ColocarNoCache
+	@ColocarNoCache(tempo=10)
 	public List<Produto> lista();
 }

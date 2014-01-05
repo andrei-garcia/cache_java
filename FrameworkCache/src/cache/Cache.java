@@ -23,7 +23,7 @@ public class Cache {
 	private   Map<String,Object> listaObjetosNoCache = new HashMap<String,Object>();
 	private   Map<String,Object> listaChavesMonitoradas = new HashMap<String,Object>();
 	private static Cache cache = new Cache();
-	private long tempoEmMilisegundosDoComputador;	
+	
 	
 	
 	private Cache(){
@@ -39,7 +39,7 @@ public class Cache {
 	
 	
 	public  boolean hasKey(String s){
-		if(cache.listaObjetosNoCache.containsKey(s))return true;
+		if(listaObjetosNoCache.containsKey(s))return true;
 		return false;
 	}
 	
@@ -48,7 +48,7 @@ public class Cache {
 
 
 	public Object get(String key){
-		return cache.listaObjetosNoCache.get(key);
+		return listaObjetosNoCache.get(key);
 		
 	}
 	
@@ -69,19 +69,60 @@ public class Cache {
 	}
 	
 	public  void limpaListaDoCache(){
-		cache.listaObjetosNoCache.clear();
+		listaObjetosNoCache.clear();
+	}
+	
+	public static <T> T proxy(Class<T> iface, final T objetoConcreto) {
+		
+		@SuppressWarnings("unchecked")
+		T proxy = (T) Proxy.newProxyInstance(iface.getClassLoader(),
+                new Class[] { iface },
+                new InvocationHandler() {
+					
+					@Override
+					public Object invoke(Object proxy, Method method, Object[] args)
+							throws Throwable {
+						
+						String chave = method.getName()+objetoConcreto.getClass().getName();
+						
+						Field[] atributosDoObjeto = objetoConcreto.getClass().getFields();
+						
+						for (Field atributo : atributosDoObjeto) {
+							chave = chave+atributo.getName();
+						}
+						
+						int tempoConfiguradoNaAnotacao = method.getAnnotation(ColocarNoCache.class).tempo();
+						
+						if(method.isAnnotationPresent(ColocarNoCache.class)){
+							if(getCache().hasKey(chave)){
+								System.out.println("dados inseridos no cache");
+								return  getCache().get(chave);
+								
+							}
+							else{
+								Object o = method.invoke(objetoConcreto, args);
+								getCache().add(chave,o,tempoConfiguradoNaAnotacao);
+								System.out.println("dados bucados no cache");
+								return o;
+							}
+						}
+						return args;
+					
+					}
+				});
+		return proxy;
 	}
 	
 	private void addChaveParaMonitorar(String key,int tempo){
-		if(!cache.listaChavesMonitoradas.containsKey(key)){
-			cache.listaChavesMonitoradas.put(key,calculaTempoDeDuracaoNoCache(tempo));
+		if(!listaChavesMonitoradas.containsKey(key)){
+			listaChavesMonitoradas.put(key,calculaTempoDeDuracaoNoCache(tempo));
 		}
 		
 	}
 	
 	private void addChaveObjetoNoCache(String key,Object objeto){
-		if(!cache.listaObjetosNoCache.containsKey(key)){
-			cache.listaObjetosNoCache.put(key,objeto);
+		if(!listaObjetosNoCache.containsKey(key)){
+			listaObjetosNoCache.put(key,objeto);
 		}
 		
 	}
@@ -94,8 +135,8 @@ public class Cache {
 	}
 	
 	private long calculaTempoDeDuracaoNoCache(int tempo){
-		tempoEmMilisegundosDoComputador = tempoAtualDoComputador();
-		long tempoDeDuracaoNoCache = (tempo*1000)+tempoEmMilisegundosDoComputador; 
+		long tempoEmMilisegundosDoComputador = tempoAtualDoComputador();
+		long tempoDeDuracaoNoCache = (tempo*60000)+tempoEmMilisegundosDoComputador; 
 		return tempoDeDuracaoNoCache;
 		
 	}
@@ -111,7 +152,7 @@ public class Cache {
 			
 			long tempoEmMillisDaChave;
 			
-			tempoEmMilisegundosDoComputador = tempoAtualDoComputador();
+			long tempoEmMilisegundosDoComputador = tempoAtualDoComputador();
 			
 			Set<String> chaves = listaChavesMonitoradas.keySet();
 			
@@ -127,7 +168,7 @@ public class Cache {
 		
 		private void excluiChaves (ArrayList<String> chaves){
 			for (String chave : chaves) {
-				System.out.println("chave :"+chave.toString()+"excluida");
+				System.out.println("chave excluida");
 				listaObjetosNoCache.remove(chave);
 				listaChavesMonitoradas.remove(chave);
 			}
@@ -138,50 +179,14 @@ public class Cache {
 			
 			ArrayList<String> arrayDeChavesParaExcluir = verificaChavesParaExclusao();
 			
-			excluiChaves(arrayDeChavesParaExcluir);
+			if(arrayDeChavesParaExcluir.size()>0){
+				excluiChaves(arrayDeChavesParaExcluir);
+			}
+			
 			
 		}
 		
 	}
 
-	public static <T> T proxy(Class<T> iface, final T objetoConcreto) {
-		
-		@SuppressWarnings("unchecked")
-		T proxy = (T) Proxy.newProxyInstance(iface.getClassLoader(),
-                new Class[] { iface },
-                new InvocationHandler() {
-					
-					@Override
-					public Object invoke(Object proxy, Method method, Object[] args)
-							throws Throwable {
-						
-						String chave = method.getName()+objetoConcreto.getClass().getName();
-						
-						Field[] camposDoObjeto = objetoConcreto.getClass().getFields();
-						
-						for (Field field : camposDoObjeto) {
-							chave = chave+field.getName();
-						}
-						
-						int tempoConfiguradoNaAnotacao = method.getAnnotation(ColocarNoCache.class).tempo();
-						
-						if(method.isAnnotationPresent(ColocarNoCache.class)){
-							if(Cache.getCache().hasKey(chave)){
-								System.out.println("lista buscada no cache");
-								return  Cache.getCache().get(chave);
-								
-							}
-							else{
-								Object o = method.invoke(objetoConcreto, args);
-								Cache.getCache().add(chave,o,tempoConfiguradoNaAnotacao);
-								System.out.println("lista inserida no cache");
-								return o;
-							}
-						}
-						return args;
-					
-					}
-				});
-		return proxy;
-	}
+
 }

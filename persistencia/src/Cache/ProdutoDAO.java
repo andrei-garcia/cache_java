@@ -121,6 +121,7 @@ public class ProdutoDAO implements IProdutoDAO {
 				throw new RuntimeException(e);
 			}
 			Cache.getCache().add("produtos",produtos,60);
+			
 			System.out.println("lista inserida no cache");
 		
 		

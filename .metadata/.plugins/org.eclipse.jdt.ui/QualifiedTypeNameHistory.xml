@@ -12,11 +12,12 @@
 <fullyQualifiedTypeName name="java.lang.annotation.Target"/>
 <fullyQualifiedTypeName name="java.lang.annotation.ElementType"/>
 <fullyQualifiedTypeName name="Cache.IProdutoDAO"/>
-<fullyQualifiedTypeName name="cache.Cache"/>
 <fullyQualifiedTypeName name="java.lang.reflect.Proxy"/>
 <fullyQualifiedTypeName name="java.lang.reflect.InvocationHandler"/>
 <fullyQualifiedTypeName name="Cache.ProdutoDAO"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="java.lang.annotation.Annotation"/>
 <fullyQualifiedTypeName name="cache.ColocarNoCache"/>
+<fullyQualifiedTypeName name="java.util.Calendar"/>
+<fullyQualifiedTypeName name="cache.Cache"/>
 </qualifiedTypeNameHistroy>

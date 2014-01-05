@@ -1,7 +1,4 @@
-/**
- * 
- * 
- */
+
 package cache;
 
 import java.lang.annotation.ElementType;
@@ -10,12 +7,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author TADS-DESENVOLVIMENTO
+ *Anotação para ser utilizada sobre uma interface ,sendo anotada
+ * em cima de um método,metodo o qual sera inserido no cache da JVM seu objeto de retorno
+ *
+ *@author Andrei Garcia
+ *@category anotação
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ColocarNoCache {
-	
-	int tempo() default 60; 
+
+	int tempo() default 60;
+
+
 }
