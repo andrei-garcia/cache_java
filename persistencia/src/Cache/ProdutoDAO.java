@@ -91,9 +91,9 @@ public class ProdutoDAO implements IProdutoDAO {
 	public List<Produto> lista2() {
 		List<Produto> produtos = new ArrayList<Produto>();
 		
-		if(Cache.getCache().hasKey("produtos")){
+		if(Cache.pegaOCache().temAchave("produtos")){
 			System.out.println("lista buscada no cache");
-			return (List<Produto>) Cache.getCache().get("produtos");
+			return (List<Produto>) Cache.pegaOCache().pegarObjeto("produtos");
 			
 		}
 		
@@ -120,13 +120,15 @@ public class ProdutoDAO implements IProdutoDAO {
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-			Cache.getCache().add("produtos",produtos,60);
+			Cache.pegaOCache().addObjetoNoCache("produtos",produtos,60);
 			
 			System.out.println("lista inserida no cache");
 		
 		
 		return produtos;	
 	}
+
+
 	
 }
 

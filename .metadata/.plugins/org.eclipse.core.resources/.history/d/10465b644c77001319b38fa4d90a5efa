@@ -1,0 +1,256 @@
+package cache;
+
+
+
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+
+
+
+
+
+public class Cache {
+		
+
+	private   Map<String,Object> listaObjetosNoCache = new HashMap<String,Object>();
+	private   Map<String,Object> listaChavesMonitoradas = new HashMap<String,Object>();
+	private static Cache cache = new Cache();
+	private static final int MULTIPLICAR_TEMPO_DE_MIN_PARA_MILLIS = 60000;
+	private static final int MILLIS_PARA_MIN = 60000;
+	private static final long DALAY_DA_EXECUCAO = 1000;
+	private static final long PERIODO_DE_EXECUCAO = 1000;
+	private static final int ZERO = 0;
+	
+	
+	private Cache(){
+		
+	}
+	
+	static {
+		cache.monitorarChavesDoCache();
+		
+	}
+	
+	
+	
+	
+	public  boolean hasKey(String chave){
+		
+		if(chaveEhValida(chave)){
+			if(temEssaChaveNaListaDeObjetos(chave)) return true;
+		}
+		
+		return false;
+	}
+	
+	
+	public int verificaTempoRestanteDaChave(String chave){
+		
+		long tempo = ZERO;
+		if(chaveEhValida(chave) && temEssaChaveNaListaDeObjetos(chave)){
+			 tempo =(long) listaChavesMonitoradas.get(chave);//-tempoAtualDoComputador())/MILLIS_PARA_MIN;
+			
+		}
+		return  (int) tempo;
+	}
+	
+	public void alteraTempoDaChave(String chave,int tempoEmMinutos){
+		
+		if(chaveEhValida(chave)&&(temEssaChaveNaListaDeObjetos(chave))){
+			long novoTempo = calculaTempoDeDuracaoNoCache(tempoEmMinutos);
+			long tempoDaChave =(long) listaChavesMonitoradas.get(chave);
+			System.out.println(tempoDaChave);
+			tempoDaChave=novoTempo;
+		}
+	}
+
+
+	public Object get(String chave){
+		
+		if(chaveEhValida(chave)){
+			if(temEssaChaveNaListaDeObjetos(chave)){
+				return listaObjetosNoCache.get(chave);
+			}
+			
+		}	
+		Exception e = new IllegalArgumentException();
+		System.out.println("chave invalida");
+		return e;
+	}
+	
+	
+	
+	public static Cache getCache() {
+		return cache;
+	}
+
+
+
+
+	public  void add(String chave,Object objeto,int tempo){
+		
+		if(chaveEhValida(chave)){
+			addChaveObjetoNoCache(chave,objeto);
+			addChaveParaMonitorar(chave,tempo);
+		}
+		
+		
+	}
+	
+	public  void limpaListaDoCache(){
+		
+		if(temElementosNoCache()){
+			limpaOCache();
+		}
+		
+	}
+	
+	public static <T> T proxy(Class<T> iface, final T objetoConcreto) {
+		
+		@SuppressWarnings("unchecked")
+		T proxy = (T) Proxy.newProxyInstance(iface.getClassLoader(),
+                new Class[] { iface },
+                new InvocationHandler() {
+					
+					@Override
+					public Object invoke(Object proxy, Method method, Object[] agumentos)
+							throws Throwable {
+						
+						
+						if(method.isAnnotationPresent(ColocarNoCache.class)){
+							String chave = objetoConcreto.getClass().getName()+"."+method.getName();
+							
+							if(agumentos!=null){
+								for (Object argumento : agumentos) {
+									if(argumento!=null){
+										chave = chave+"."+argumento;
+									}
+									
+								}
+							}
+							
+							
+							if(getCache().hasKey(chave)){
+								System.out.println("dados buscados no cache");
+								return  getCache().get(chave);
+								
+							}
+							else{
+								int tempoConfiguradoNaAnotacao = method.getAnnotation(ColocarNoCache.class).tempo();
+								Object o = method.invoke(objetoConcreto, agumentos);
+								getCache().add(chave,o,tempoConfiguradoNaAnotacao);
+								System.out.println("dados inseridos no cache");
+								return o;
+							}
+						}
+						return agumentos;
+					
+					}
+				});
+		return proxy;
+	}
+	
+	
+	private boolean temElementosNoCache(){
+		return listaObjetosNoCache.size()>ZERO;
+	}
+	
+	private boolean temEssaChaveNaListaDeObjetos(String chave){
+		return listaObjetosNoCache.containsKey(chave);
+	}
+	
+	
+	private boolean chaveEhValida(String chave){
+		return ((chave!=null)&&(chave.length()>ZERO));
+	}
+	
+	private void addChaveParaMonitorar(String chave,int tempo){
+		if(!listaChavesMonitoradas.containsKey(chave)){
+			listaChavesMonitoradas.put(chave,calculaTempoDeDuracaoNoCache(tempo));
+		}
+		
+	}
+	
+	private void limpaOCache(){
+		listaObjetosNoCache.clear();
+		listaChavesMonitoradas.clear();
+	}
+	
+	private void addChaveObjetoNoCache(String chave,Object objeto){
+		if(!listaObjetosNoCache.containsKey(chave)){
+			listaObjetosNoCache.put(chave,objeto);
+		}
+		
+	}
+	
+	private void monitorarChavesDoCache() {
+		Timer timer = new Timer();
+		
+		timer.schedule(new MonitoraChaves(),DALAY_DA_EXECUCAO,PERIODO_DE_EXECUCAO);
+		
+	}
+	
+	private long calculaTempoDeDuracaoNoCache(int tempo){
+		long tempoEmMilisegundosDoComputador = tempoAtualDoComputador();
+		long tempoDeDuracaoNoCache = (tempo*MULTIPLICAR_TEMPO_DE_MIN_PARA_MILLIS)+tempoEmMilisegundosDoComputador; 
+		return tempoDeDuracaoNoCache;
+		
+	}
+	
+	private long tempoAtualDoComputador(){
+		return System.currentTimeMillis();
+	}
+	
+	class MonitoraChaves extends TimerTask {
+	
+		private ArrayList<String> verificaChavesParaExclusao(){
+			ArrayList<String> chavesParaExcluir = new ArrayList<String>();
+			
+			long tempoEmMillisDaChave;
+			
+			long tempoEmMilisegundosDoComputador = tempoAtualDoComputador();
+			
+			Set<String> chaves = listaChavesMonitoradas.keySet();
+			
+			for (String chave : chaves) {
+				tempoEmMillisDaChave = (long) listaChavesMonitoradas.get(chave);
+				if(tempoEmMillisDaChave<=tempoEmMilisegundosDoComputador){
+					chavesParaExcluir.add(chave);
+				}
+			}
+			
+			return chavesParaExcluir;
+		}
+		
+		private void excluiChaves (ArrayList<String> chaves){
+			for (String chave : chaves) {
+				System.out.println("chave excluida");
+				listaObjetosNoCache.remove(chave);
+				listaChavesMonitoradas.remove(chave);
+			}
+		}
+	
+		@Override
+		public void run() {
+			
+			if(temElementosNoCache()){
+				ArrayList<String> arrayDeChavesParaExcluir = verificaChavesParaExclusao();
+				if(arrayDeChavesParaExcluir.size()>ZERO){
+					excluiChaves(arrayDeChavesParaExcluir);
+				}
+			}
+			
+		}
+		
+	}
+
+
+}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename Java project &apos;FrameworkCache&apos; to &apos;toolkitCache&apos;&#x0D;&#x0A;- Original element: &apos;FrameworkCache&apos;&#x0D;&#x0A;- Renamed element: &apos;FrameworkCache&apos;&#x0D;&#x0A;- Update references to refactored element" description="Rename Java project &apos;FrameworkCache&apos;" flags="7" id="org.eclipse.jdt.ui.rename.java.project" input="=FrameworkCache" name="toolkitCache" references="true" stamp="1389118052374" version="1.0"/>
+</session>

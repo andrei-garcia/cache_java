@@ -1,0 +1,5 @@
+1389058399137	Rename field 'periodoDeExecucao'
+1389058420230	Rename field 'dalayDeCadaExecucao'
+1389058457353	Rename field 'multiplicarTempoEmMinutosParaMillis'
+1389114166641	Rename local variable 'chavesParaExcluir'
+1389114189228	Rename local variable 'addEssachaveParaExcluir'

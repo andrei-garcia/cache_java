@@ -1,0 +1,79 @@
+package Teste;
+
+import static org.junit.Assert.*;
+import org.junit.Test;
+import cache.Cache;
+import Cache.Produto;
+
+public class Teste{
+	
+	
+	
+	int tempoDeDuracaoNoCache = 1;
+	
+	
+	@Test
+	public void test_has_Key() {
+		Produto produto = new Produto();
+		Cache.getCache().add("produtos",produto,tempoDeDuracaoNoCache);
+		assertTrue(Cache.getCache().hasKey("produtos"));
+		
+	}
+	
+	
+ 	@Test
+	public void test_add_no_Cache() {
+		Produto produto2 = new Produto();
+		Produto produto4 = new Produto();
+		Cache.getCache().add("produtos2",produto2,tempoDeDuracaoNoCache);
+		
+		produto4=(Produto)Cache.getCache().get("produtos2");
+		assertTrue(produto2.equals(produto4));
+		
+	}
+
+
+	
+
+	@Test
+	public void test_limpar_Cache() {
+		Produto produto = new Produto();
+		Cache.getCache().add("produtos",produto,tempoDeDuracaoNoCache);
+		Cache.getCache().limpaListaDoCache();
+		assertFalse(Cache.getCache().hasKey("produtos"));
+		
+	}
+	
+	@Test
+	public void test_pegar_Cache() {
+		Cache cache1= Cache.getCache();
+		Cache cache2= Cache.getCache();
+		
+		assertTrue(cache1.equals(cache2));
+		
+	}
+	
+	@Test
+	public void test_pegar_Objeto_Do_Cache() {
+		Produto produto = new Produto();
+		Cache.getCache().add("produtos",produto,tempoDeDuracaoNoCache);
+		assertEquals(Cache.getCache().get("produtos"),produto);
+		
+	}
+	
+	@Test
+	public void test_verificar_tempo_do_objeto() {
+		Produto produto = new Produto();
+		Cache.getCache().add("produtos",produto,tempoDeDuracaoNoCache);
+		int tempo = Cache.getCache().verificaTempoRestanteDoObjeto("produtos");
+		assertEquals(Cache.getCache().verificaTempoRestanteDoObjeto("produtos"),tempo);
+		
+	}
+	
+	
+	
+
+	
+	
+
+}

@@ -1,0 +1,302 @@
+package cache;
+
+/**
+ *Classe utilitaria para criar um cache de objetos 
+ *@author Andrei Garcia (andrei_garcia2@hotmail.com)
+ *@since JDK.6
+*/
+
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+
+
+
+
+
+public class Cache {
+		
+
+	private   Map<String,Object> listaObjetosNoCache = new HashMap<String,Object>();
+	private   Map<String,Object> listaChavesMonitoradas = new HashMap<String,Object>();
+	private static Cache cache = new Cache();
+	private static final int MULTIPLICAR_TEMPO_DE_MIN_PARA_MILLIS = 60000;
+	private static final int MILLIS_PARA_MIN = 60000;
+	private static final long DALAY_DA_EXECUCAO = 1000;
+	private static final long PERIODO_DE_EXECUCAO = 1000;
+	private static final int ZERO = 0;
+	
+	
+	private Cache(){
+		
+	}
+	
+	static {
+		cache.monitorarChavesDoCache();
+		
+	}
+	
+	
+	/**
+     *Metodo para verificar se uma chave existe no cache
+     *@param chave E uma String que nao pode ser nula ou ser vazia
+     *@return chaveExisteNoCache é uma variavel booleana que retorna true se a chave existe no cache e false se nao existe ou é invalida
+     */
+	
+	public  boolean hasKey(String chave){
+		boolean chaveExisteNoCache = true;
+		if(chaveEhValida(chave)&&temEssaChaveNaListaDeObjetos(chave)) return chaveExisteNoCache;
+		return  chaveExisteNoCache=false;
+	}
+	
+	
+	/**
+     *Metodo para verificar o tempo restante de um objeto no cache passando sua chave correspondente
+     *@param chave E uma String que nao pode ser nula ou ser vazia
+     *@return tempo é o tempo restante do objeto no cache ou ZERO se esse objeto nao existir no cache
+     */
+	public int verificaTempoRestanteDoObjeto(String chave){
+		
+		long tempo = ZERO;
+		if(chaveEhValida(chave) && temEssaChaveNaListaDeObjetos(chave)){
+			 tempo =(long) listaChavesMonitoradas.get(chave);
+			 
+			 tempo=(tempo-tempoAtualDoComputador())/MILLIS_PARA_MIN;
+			
+		}
+		return  (int) tempo;
+	}
+	
+	
+	/**
+     *Metodo para alterar o tempo de um objeto no cache,caso o objeto nao esteja  o cache ou a chave seja invalida 
+     *uma mensagem é exibida informando problema na chave ou objeto invalido
+     *@param chave E uma String que nao pode ser nula ou ser vazia
+     *@param tempoEmMinutos E um int que indica quantos minutos o objeto devera permanecer ativo no cache
+     *
+     */
+	public void alteraTempoDaObjeto(String chave,int tempoEmMinutos){
+		
+		if(chaveEhValida(chave)&&(temEssaChaveNaListaDeObjetos(chave))){
+			long novoTempo = calculaTempoDeDuracaoNoCache(tempoEmMinutos);
+			atualizaTempoDaChave(chave, novoTempo);
+			System.out.println("tempo alterado da chave para : "+tempoEmMinutos +" minutos");
+		}
+		else System.out.println("chave invalida ou objeto inexistente no cache ");
+	}
+
+	
+	/**
+     *Metodo para obter um objeto existente no cache 
+     *@param chave E uma String que nao pode ser nula ou ser vazia
+     *@return chave é a propria chave caso ela seja invalida ou o objeto nao exista no cache
+     *@return objeto é objeto correspondente aquela chave
+     */
+	public Object get(String chave){
+		
+		if(chaveEhValida(chave)==false){
+			System.out.println("chave invalida");
+			return chave;
+		}
+		if(temEssaChaveNaListaDeObjetos(chave)==false){
+			System.out.println("objeto inexistente na lista");
+			return chave;
+		}
+		
+		
+		Object objeto = listaObjetosNoCache.get(chave);
+		return objeto;
+	}
+	
+	
+	/**
+     *Metodo para o cache
+     *@return Cache é objeto cache da classe
+     */
+	public static Cache getCache() {
+		return cache;
+	}
+
+
+
+	/**
+     *Metodo para adicionar um objeto no cache 
+     *@param chave E uma String que nao pode ser nula ou ser vazia
+     *@param objeto é o objeto a ser adicionado no cache
+     *@param tempo é o tempo que o objeto vai permanecer no cache
+     */
+	public  void add(String chave,Object objeto,int tempo){
+		
+		if(chaveEhValida(chave)){
+			addChaveObjetoNoCache(chave,objeto);
+			addChaveParaMonitorar(chave,tempo);
+		}
+		
+		
+	}
+	
+	public  void limpaListaDoCache(){
+		
+		if(temElementosNoCache()){
+			limpaOCache();
+		}
+		
+	}
+	
+	public static <T> T proxy(Class<T> iface, final T objetoConcreto) {
+		
+		@SuppressWarnings("unchecked")
+		T proxy = (T) Proxy.newProxyInstance(iface.getClassLoader(),
+                new Class[] { iface },
+                new InvocationHandler() {
+					
+					@Override
+					public Object invoke(Object proxy, Method method, Object[] agumentos)
+							throws Throwable {
+						
+						
+						if(temAnotacao(method)){
+							String chave = objetoConcreto.getClass().getName()+"."+method.getName();
+							
+							if(agumentos!=null){
+								for (Object argumento : agumentos) {
+									chave = chave+"."+argumento;
+								}
+							}
+							
+							
+							if(getCache().temEssaChaveNaListaDeObjetos(chave)){
+								System.out.println("dados buscados no cache");
+								return  getCache().get(chave);
+								
+							}
+							else{
+								int tempoConfiguradoNaAnotacao = method.getAnnotation(ColocarNoCache.class).tempo();
+								Object o = method.invoke(objetoConcreto, agumentos);
+								getCache().add(chave,o,tempoConfiguradoNaAnotacao);
+								System.out.println("dados inseridos no cache");
+								return o;
+							}
+						}
+						return agumentos;
+					
+					}
+				});
+		return proxy;
+	}
+	
+	private boolean validaObjeto(Object objeto){
+		return objeto!=null;
+	}
+	
+	private static boolean temAnotacao(Method metodo){
+		return metodo.isAnnotationPresent(ColocarNoCache.class);
+	}
+	
+	private boolean temElementosNoCache(){
+		return listaObjetosNoCache.size()>ZERO;
+	}
+	
+	private void atualizaTempoDaChave(String chave,long tempo){
+		listaChavesMonitoradas.remove(chave);
+		listaChavesMonitoradas.put(chave, tempo);
+	}
+	
+	private boolean temEssaChaveNaListaDeObjetos(String chave){
+		return listaObjetosNoCache.containsKey(chave);
+	}
+	
+	
+	private boolean chaveEhValida(String chave){
+		return ((chave!=null)&&(chave.length()>ZERO));
+	}
+	
+	private void addChaveParaMonitorar(String chave,int tempo){
+		if(!listaChavesMonitoradas.containsKey(chave)){
+			listaChavesMonitoradas.put(chave,calculaTempoDeDuracaoNoCache(tempo));
+		}
+		
+	}
+	
+	private void limpaOCache(){
+		listaObjetosNoCache.clear();
+		listaChavesMonitoradas.clear();
+	}
+	
+	private void addChaveObjetoNoCache(String chave,Object objeto){
+		if(!listaObjetosNoCache.containsKey(chave)){
+			listaObjetosNoCache.put(chave,objeto);
+		}
+		
+	}
+	
+	private void monitorarChavesDoCache() {
+		Timer timer = new Timer();
+		
+		timer.schedule(new MonitoraChaves(),DALAY_DA_EXECUCAO,PERIODO_DE_EXECUCAO);
+		
+	}
+	
+	private long calculaTempoDeDuracaoNoCache(int tempo){
+		long tempoEmMilisegundosDoComputador = tempoAtualDoComputador();
+		long tempoDeDuracaoNoCache = (tempo*MULTIPLICAR_TEMPO_DE_MIN_PARA_MILLIS)+tempoEmMilisegundosDoComputador; 
+		return tempoDeDuracaoNoCache;
+		
+	}
+	
+	private long tempoAtualDoComputador(){
+		return System.currentTimeMillis();
+	}
+	
+	class MonitoraChaves extends TimerTask {
+	
+		private ArrayList<String> verificaChavesParaExclusao(){
+			ArrayList<String> chavesParaExcluir = new ArrayList<String>();
+			
+			long tempoEmMillisDaChave;
+			
+			long tempoEmMilisegundosDoComputador = tempoAtualDoComputador();
+			
+			Set<String> chaves = listaChavesMonitoradas.keySet();
+			
+			for (String chave : chaves) {
+				tempoEmMillisDaChave = (long) listaChavesMonitoradas.get(chave);
+				if(tempoEmMillisDaChave<=tempoEmMilisegundosDoComputador){
+					chavesParaExcluir.add(chave);
+				}
+			}
+			
+			return chavesParaExcluir;
+		}
+		
+		private void excluiChaves (ArrayList<String> chaves){
+			for (String chave : chaves) {
+				listaObjetosNoCache.remove(chave);
+				listaChavesMonitoradas.remove(chave);
+				System.out.println("chave :"+chave.toString()+" excluida");
+			}
+		}
+	
+		@Override
+		public void run() {
+			
+			if(temElementosNoCache()){
+				ArrayList<String> arrayDeChavesParaExcluir = verificaChavesParaExclusao();
+				if(arrayDeChavesParaExcluir.size()>ZERO){
+					excluiChaves(arrayDeChavesParaExcluir);
+				}
+			}
+			
+		}
+		
+	}
+
+
+}

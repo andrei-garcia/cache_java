@@ -1,0 +1,46 @@
+package teste;
+
+import cache.Cache;
+import Cache.IProdutoDAO;
+import Cache.Produto;
+import Cache.ProdutoDAO;
+
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		//inserindo no cache atravez da anotaçao @ColocarNoCache
+		IProdutoDAO dao3 = Cache.proxy(IProdutoDAO.class,new ProdutoDAO());
+		
+		
+		//################################################## teste de tempo
+		//antes de inserir no cache
+		System.out.println("antes de inserir no cache");
+		long inicio = System.nanoTime();    
+		dao3.lista();
+		long fim  = System.nanoTime();    
+		System.out.println("tempo :" + (fim - inicio) );  
+		//depois de inserir no cache
+		System.out.println("depois de inserir no cache");
+		long inicio2 = System.nanoTime(); 
+		dao3.lista();
+		long fim2  = System.nanoTime();    
+		System.out.println("tempo :" + (fim2 - inicio2 ));  
+		
+		//###################################################
+		
+		//teste adicionando no cache
+		Produto p = new Produto();
+		Cache.getCache().add("produto", p, 3);
+		
+		//teste alterando o tempo de uma chave no cache
+		Cache.getCache().alteraTempoDaObjeto("produto",700);
+
+		//teste verificando o tempo de uma chave no cache
+		int tempo = Cache.getCache().verificaTempoRestanteDoObjeto("produto");
+		System.out.println(tempo);
+	}
+
+}

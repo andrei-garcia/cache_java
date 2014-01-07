@@ -13,5 +13,10 @@
     "location": "C:\\Users\\TADS-DESENVOLVIMENTO\\Documents\\GitHub\\cache_java\\persistencia\\src",
     "status": "UNRESOLVED",
     "error": "No class path info available for \u0027C:\\Users\\TADS-DESENVOLVIMENTO\\Documents\\GitHub\\cache_java\\persistencia\\src\u0027. Skipped."
+  },
+  "C:\\Users\\TADS-DESENVOLVIMENTO\\Documents\\GitHub\\cache_java\\toolkitCache\\src": {
+    "location": "C:\\Users\\TADS-DESENVOLVIMENTO\\Documents\\GitHub\\cache_java\\toolkitCache\\src",
+    "status": "UNRESOLVED",
+    "error": "No class path info available for \u0027C:\\Users\\TADS-DESENVOLVIMENTO\\Documents\\GitHub\\cache_java\\toolkitCache\\src\u0027. Skipped."
   }
 }

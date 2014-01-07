@@ -1,0 +1,27 @@
+package teste;
+
+import cache.Cache;
+import Cache.IProdutoDAO;
+import Cache.Produto;
+import Cache.ProdutoDAO;
+
+
+
+public class Main {
+
+	public static void main(String[] args) {
+	
+		IProdutoDAO dao3 = Cache.proxy(IProdutoDAO.class,new ProdutoDAO());
+		System.out.println(dao3.lista());
+		System.out.println(dao3.lista());
+		
+		Produto p = dao3.lista().get(1);
+		Cache.getCache().add("tt", p, 3333);
+		
+		//Cache.getCache().alteraTempoDaChave("tt", 500);
+		
+		int tempo = Cache.getCache().verificaTempoRestanteDaChave("stt");
+		System.out.println(tempo);
+	}
+
+}

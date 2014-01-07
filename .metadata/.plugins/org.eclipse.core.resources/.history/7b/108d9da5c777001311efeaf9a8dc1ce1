@@ -1,0 +1,43 @@
+package teste;
+
+import cache.Cache;
+import Cache.IProdutoDAO;
+import Cache.Produto;
+import Cache.ProdutoDAO;
+
+
+
+public class Main {
+
+	public static void main(String[] args) {
+	
+		IProdutoDAO dao3 = Cache.proxy(IProdutoDAO.class,new ProdutoDAO());
+		System.out.println("antes de inserir no cache");
+		long inicio = System.nanoTime();    
+		//System.out.println(dao3.lista());]
+		
+			dao3.lista();
+		
+		
+		long fim  = System.nanoTime();    
+		System.out.println("tempo :" + (fim - inicio) );  
+		
+		System.out.println("depois de inserir no cache");
+		long inicio2 = System.nanoTime(); 
+		//System.out.println(dao3.lista());
+		dao3.lista();
+		//Produto p = dao3.lista().get(1);
+		
+		long fim2  = System.nanoTime();    
+		System.out.println("tempo :" + (fim2 - inicio2 ));  
+		
+		//Cache.getCache().add("tttt", p, 3);
+		
+		//Cache.getCache().alteraTempoDaObjeto("tttt",700);
+		
+		
+		//int tempo4 = Cache.getCache().verificaTempoRestanteDaChave("tt2");
+		//System.out.println(tempo4);
+	}
+
+}
