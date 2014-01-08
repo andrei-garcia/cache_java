@@ -33,11 +33,11 @@ public class Main {
 		//###################################################
 		
 		//adicionando no cache manualmente
-		//Produto p = new Produto();
-		//Cache.pegaOCache().addObjetoNoCache("produto", p, 3);
+		Produto p = new Produto();
+		Cache.pegaOCache().addObjetoNoCache("produto", p, 3);
 		
 		//teste alterando o tempo de uma chave no cache
-		//Cache.pegaOCache().alteraTempoDoObjeto("produto",700);
+		Cache.pegaOCache().alteraTempoDoObjeto("produto",700);
 
 		// verificando o tempo de uma chave no cache
 		int tempo = Cache.pegaOCache().verificaTempoRestanteDoObjeto("produto");

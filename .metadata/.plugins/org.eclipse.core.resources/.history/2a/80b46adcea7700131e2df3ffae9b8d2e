@@ -75,7 +75,14 @@ public class Teste{
 	}
 	
 	
-	
+	@Test
+	public void test_verificar_altera_tempo_do_objeto() {
+		Produto produto = new Produto();
+		Cache.pegaOCache().addObjetoNoCache("produtos",produto,tempoDeDuracaoNoCache);
+		Cache.pegaOCache().alteraTempoDoObjeto("produtos", 500);
+		assertEquals(Cache.pegaOCache().verificaTempoRestanteDoObjeto("produtos"),500);
+		
+	}
 
 	@Test
 	public void test_add_objeto_atraves_anotacao() {

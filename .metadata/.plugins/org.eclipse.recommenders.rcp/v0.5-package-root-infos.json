@@ -150,6 +150,19 @@
       "micro": 0,
       "qualifier": ""
     },
+    "jarFileFingerprint": "77df74be5591c718de35ca1768786d3901103afe",
+    "jarFileModificationDate": "2013-08-19T00:23:38.956-03:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\ext\\jaccess.jar",
+    "javaRuntime": true
+  },
+  {
+    "symbolicName": "jre",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0,
+      "qualifier": ""
+    },
     "jarFileFingerprint": "8548061f982dcc8843b280dfd86d3fffff57bb59",
     "jarFileModificationDate": "2013-08-19T00:23:39.081-03:00",
     "location": "C:\\Program Files\\Java\\jre7\\lib\\jfr.jar",
@@ -163,9 +176,9 @@
       "micro": 0,
       "qualifier": ""
     },
-    "jarFileFingerprint": "77df74be5591c718de35ca1768786d3901103afe",
-    "jarFileModificationDate": "2013-08-19T00:23:38.956-03:00",
-    "location": "C:\\Program Files\\Java\\jre7\\lib\\ext\\jaccess.jar",
+    "jarFileFingerprint": "cbb58ca9ff2758edb4f29b8570cfc9fe7aa3a150",
+    "jarFileModificationDate": "2013-08-19T00:23:43.044-03:00",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\rt.jar",
     "javaRuntime": true
   },
   {
@@ -180,19 +193,6 @@
     "jarFileModificationDate": "2013-05-17T12:05:12-03:00",
     "location": "C:\\Users\\TADS-DESENVOLVIMENTO\\Desktop\\eclipse\\plugins\\org.junit_4.11.0.v201303080030\\junit.jar",
     "javaRuntime": false
-  },
-  {
-    "symbolicName": "jre",
-    "version": {
-      "major": 1,
-      "minor": 0,
-      "micro": 0,
-      "qualifier": ""
-    },
-    "jarFileFingerprint": "cbb58ca9ff2758edb4f29b8570cfc9fe7aa3a150",
-    "jarFileModificationDate": "2013-08-19T00:23:43.044-03:00",
-    "location": "C:\\Program Files\\Java\\jre7\\lib\\rt.jar",
-    "javaRuntime": true
   },
   {
     "symbolicName": "jre",
